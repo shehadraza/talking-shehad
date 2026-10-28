@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>টকিং মি</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#3b2314;--btn:#ff8a3d;--rec:#e63946}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Baloo Da 2","Hind Siliguri",system-ui,sans-serif;color:var(--ink);
+  background:repeating-linear-gradient(90deg,#ffe6b8 0 38px,#ffdca3 38px 76px);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  overflow:hidden;position:relative;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+/* ঘরের মেঝে ও কার্পেট */
+body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:25vh;border-top:8px solid #fff;
+  background:repeating-linear-gradient(90deg,#c0813f 0 70px,#b0732f 70px 73px),linear-gradient(#0000,#0002);background-blend-mode:multiply}
+.rug{position:absolute;bottom:3vh;left:50%;width:min(110vw,520px);height:15vh;margin-left:calc(min(110vw,520px)/-2);
+  border-radius:50%;background:radial-gradient(ellipse,#ff7b7b 0 45%,#ffd36b 47% 58%,#e5566a 60%);box-shadow:0 6px 0 rgba(0,0,0,.15)}
+/* জানালা */
+.win{position:absolute;top:13%;left:5%;width:84px;height:104px;border:7px solid #fff;border-radius:42px 42px 6px 6px;
+  background:linear-gradient(#7ec3f5,#d9f0ff);box-shadow:0 4px 0 rgba(0,0,0,.15);overflow:hidden}
+.win::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:5px;margin-left:-2.5px;background:#fff}
+.win::after{content:"";position:absolute;left:12px;top:30px;width:34px;height:12px;border-radius:12px;background:#fff;box-shadow:12px -6px 0 -1px #fff}
+.frame{position:absolute;top:15%;right:6%;width:64px;height:78px;border:6px solid #a8662d;border-radius:6px;background:linear-gradient(135deg,#9be37f,#4fb4e8);box-shadow:0 4px 0 rgba(0,0,0,.15)}
+
+#say{position:relative;z-index:3;margin-top:12px;max-width:min(88vw,420px);background:#fff;padding:8px 18px;border-radius:24px;
+  font-weight:800;font-size:1.15rem;text-align:center;min-height:44px;box-shadow:0 5px 0 rgba(0,0,0,.14);border:3px solid #ffb35c}
+#say::after{content:"";position:absolute;bottom:-12px;left:50%;margin-left:-10px;border:10px solid transparent;border-top-color:#fff;border-bottom:0}
+
+#char{position:relative;z-index:2;width:min(80vw,350px);height:min(60vh,122vw);user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#char svg{width:100%;height:100%;overflow:visible}
+[data-act]{cursor:pointer}
+#breath{transform-origin:150px 425px;animation:breathe 3.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.01,1.017)}}
+#head{transform-origin:150px 215px}
+#torso{transform-origin:150px 340px}
+#eyes{transform-origin:150px 130px;animation:blink 4s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+#laughEyes{display:none}
+.laugh #eyes{display:none}.laugh #laughEyes{display:block}
+#browL,#browR{transition:transform .15s}
+#browL{transform-origin:122px 104px}#browR{transform-origin:178px 104px}
+.talking #browL,.talking #browR{animation:brow .35s infinite alternate}
+@keyframes brow{to{transform:translateY(-5px)}}
+.ouch #browL{transform:rotate(16deg) translateY(4px)}.ouch #browR{transform:rotate(-16deg) translateY(4px)}
+.ouch #eyes{transform:scaleY(.45);animation:none}
+#open{display:none;transform-origin:150px 188px}
+.talking #open,.ouch #open{display:block}
+.talking #open{animation:yap .16s infinite alternate}
+.ouch #open{transform:scaleY(1.2)}
+.talking #smile,.ouch #smile,.laugh #smile{display:none}
+.laugh #open{display:block;animation:yap .12s infinite alternate}
+@keyframes yap{from{transform:scaleY(.3)}to{transform:scaleY(1.1)}}
+.shake #head{animation:shake .5s}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-9deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(4deg)}}
+.wobble #torso{animation:wob .7s}
+@keyframes wob{0%,100%{transform:scale(1)}25%{transform:scale(1.07,.94)}50%{transform:scale(.95,1.05)}75%{transform:scale(1.04,.97)}}
+.hop{animation:hop .6s}
+@keyframes hop{0%,100%{transform:translateY(0)}40%,60%{transform:translateY(-40px)}}
+.listen #head{transform:rotate(7deg);transition:transform .2s}
+.fx{position:absolute;font-size:1.8rem;font-weight:800;pointer-events:none;animation:fly .9s forwards;z-index:4}
+@keyframes fly{to{transform:translate(var(--dx),-70px) scale(1.4);opacity:0}}
+.food{position:absolute;left:44%;top:88%;font-size:2.6rem;pointer-events:none;z-index:4;animation:eat 1s forwards}
+@keyframes eat{to{top:40%;transform:scale(.3);opacity:.2}}
+
+/* বাটন */
+button{font:inherit;font-weight:800;border:0;cursor:pointer;color:#fff;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.side{position:absolute;top:37%;z-index:5;display:flex;flex-direction:column;gap:14px}
+.side.l{left:8px}.side.r{right:8px}
+.ib{width:60px;height:60px;border-radius:50%;background:linear-gradient(#ffb04f,#ff7a2a);font-size:1.7rem;line-height:1;
+  box-shadow:0 5px 0 #b3511a,0 8px 10px rgba(0,0,0,.2);border:3px solid #fff}
+.ib small{display:block;font-size:.62rem;margin-top:1px}
+.ib:active{transform:translateY(3px)}
+#controls{position:relative;z-index:5;margin-bottom:2.2vh}
+#mic{width:92px;height:92px;border-radius:50%;font-size:2.3rem;background:linear-gradient(#ff7f7f,#e63946);border:4px solid #fff;
+  box-shadow:0 6px 0 #a3202c,0 10px 14px rgba(0,0,0,.25);touch-action:none}
+.on{background:linear-gradient(#ff4d5e,#b3121f)!important;animation:pulse .7s infinite alternate}
+@keyframes pulse{to{transform:scale(1.1)}}
+#start{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(59,35,20,.6);cursor:pointer}
+#start span{background:#fff;padding:20px 30px;border-radius:28px;font-weight:800;font-size:1.45rem;box-shadow:0 7px 0 #ffb35c}
+#panel{position:fixed;inset:auto 0 0 0;z-index:8;background:#fff;border-radius:24px 24px 0 0;padding:16px;max-height:75vh;overflow:auto;
+  box-shadow:0 -6px 24px rgba(0,0,0,.3);transform:translateY(105%);transition:transform .25s}
+#panel.open{transform:none}
+#panel h2{font-size:1.15rem;margin-bottom:4px}
+#panel p{font-size:.9rem;margin-bottom:10px;opacity:.8}
+.row{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #eee}
+.row .t{flex:1;font-weight:500}
+.row button{padding:8px 12px;font-size:.9rem;border-radius:999px;background:#3b82c4;touch-action:none}
+.up{padding:8px 12px;font-size:.9rem;border-radius:999px;background:#7c5cd6;color:#fff;cursor:pointer}
+.ok{color:#2a9d4a;font-weight:800;min-width:1.2em}
+@media (max-height:640px){.win,.frame{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="win"></div><div class="frame"></div><div class="rug"></div>
+<div id="start"><span>❤️ My Love Nova ❤️<br><small style="font-size:.9rem;font-weight:500">👆 ট্যাপ করে শুরু করো</small></span></div>
+<div id="say">My Love Nova ❤️</div>
+
+<div class="side l">
+  <button class="ib" id="feed">🍔<small>খাওয়াও</small></button>
+  <button class="ib" id="laugh">😂<small>হাসি</small></button>
+</div>
+<div class="side r">
+  <button class="ib" id="hello">👋<small>হ্যালো</small></button>
+  <button class="ib" id="teach">🎙️<small>শেখাও</small></button>
+</div>
+
+<div id="char">
+<svg viewBox="0 0 300 450" role="img" aria-label="কার্টুন ক্যারেক্টার">
+<defs>
+  <radialGradient id="skin" cx="45%" cy="38%" r="70%"><stop offset="0" stop-color="#e8b88c"/><stop offset=".6" stop-color="#d49b6f"/><stop offset="1" stop-color="#b87d57"/></radialGradient>
+  <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2b24"/><stop offset="1" stop-color="#110b09"/></linearGradient>
+  <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dcebfa"/><stop offset="1" stop-color="#aac6e6"/></linearGradient>
+  <linearGradient id="pants" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#262a33"/><stop offset=".5" stop-color="#171a20"/><stop offset="1" stop-color="#262a33"/></linearGradient>
+  <radialGradient id="eyeW" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e4ebf2"/></radialGradient>
+</defs>
+<ellipse cx="150" cy="437" rx="100" ry="10" fill="rgba(0,0,0,.25)"/>
+<g id="breath">
+  <g data-act="feet">
+    <rect x="100" y="325" width="48" height="98" rx="12" fill="url(#pants)"/><rect x="152" y="325" width="48" height="98" rx="12" fill="url(#pants)"/>
+    <path d="M92 352 Q103 376 112 398 M208 352 Q197 376 188 398" stroke="#454b58" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M76 426 Q78 400 118 400 Q148 400 150 426 Z" fill="#fafbfc" stroke="#c9ced6" stroke-width="2"/>
+    <path d="M224 426 Q222 400 182 400 Q152 400 150 426 Z" fill="#fafbfc" stroke="#c9ced6" stroke-width="2"/>
+    <path d="M90 414 Q112 404 136 414 M164 414 Q188 404 210 414" stroke="#ff7a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <rect x="74" y="424" width="78" height="9" rx="4.5" fill="#e9ecf0"/><rect x="148" y="424" width="78" height="9" rx="4.5" fill="#e9ecf0"/>
+  </g>
+  <rect x="130" y="196" width="40" height="58" rx="14" fill="#b87d57"/>
+  <g id="torso" data-act="belly">
+    <path d="M92 236 Q150 218 208 236 L214 348 L86 348Z" fill="url(#shirt)" stroke="#8fb0d4" stroke-width="2"/>
+    <path d="M150 252 V348" stroke="#93b3d6" stroke-width="3"/>
+    <circle cx="150" cy="266" r="3" fill="#7fa3cc"/><circle cx="150" cy="284" r="3" fill="#7fa3cc"/>
+    <path d="M108 300 Q124 306 134 334 M192 300 Q176 306 166 334 M100 262 Q112 270 116 284" stroke="#93b3d6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M92 240 Q62 252 64 302 Q66 340 94 344 L108 334 L102 252Z" fill="url(#shirt)" stroke="#8fb0d4" stroke-width="2"/>
+    <path d="M208 240 Q238 252 236 302 Q234 340 206 344 L192 334 L198 252Z" fill="url(#shirt)" stroke="#8fb0d4" stroke-width="2"/>
+    <path d="M68 322 Q80 332 96 332 M232 322 Q220 332 204 332" stroke="#8fb0d4" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M150 256 L124 222 L136 218 L150 240Z" fill="#f2f8fe" stroke="#93b3d6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M150 256 L176 222 L164 218 L150 240Z" fill="#e6f0fa" stroke="#93b3d6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M136 236 L146 304 M164 236 L154 304" stroke="#e23b4a" stroke-width="4" fill="none"/>
+    <rect x="136" y="302" width="28" height="36" rx="5" fill="#fff" stroke="#8aa0b8" stroke-width="2"/>
+    <rect x="136" y="302" width="28" height="8" rx="3" fill="#e23b4a"/>
+    <circle cx="150" cy="320" r="5" fill="#cfd9e4"/><rect x="141" y="328" width="18" height="3" fill="#8aa0b8"/>
+  </g>
+  <!-- মাথা: বড় করে কার্টুন স্টাইল -->
+  <g transform="translate(150 215) scale(1.28) translate(-150 -215)">
+  <g id="head" data-act="head">
+    <ellipse cx="77" cy="148" rx="12" ry="18" fill="#b87d57"/><ellipse cx="223" cy="148" rx="12" ry="18" fill="#b87d57"/>
+    <ellipse cx="77" cy="150" rx="5" ry="10" fill="#9c6445"/><ellipse cx="223" cy="150" rx="5" ry="10" fill="#9c6445"/>
+    <ellipse cx="150" cy="138" rx="74" ry="80" fill="url(#skin)" stroke="#8f5a3a" stroke-width="2"/>
+    <ellipse cx="122" cy="96" rx="30" ry="14" fill="#fff" opacity=".13"/>
+    <path d="M78 140 Q80 218 150 220 Q220 218 222 140 Q205 176 150 176 Q95 176 78 140Z" fill="#2a1d18"/>
+    <ellipse cx="150" cy="208" rx="26" ry="7" fill="#fff" opacity=".07"/>
+    <g fill="#5a443a" opacity=".7"><circle cx="96" cy="176" r="1.4"/><circle cx="106" cy="186" r="1.4"/><circle cx="204" cy="176" r="1.4"/><circle cx="194" cy="186" r="1.4"/><circle cx="118" cy="204" r="1.4"/><circle cx="182" cy="204" r="1.4"/></g>
+    <circle cx="97" cy="168" r="12" fill="#f0867a" opacity=".42"/><circle cx="203" cy="168" r="12" fill="#f0867a" opacity=".42"/>
+    <path d="M150 138 Q138 160 150 165 Q162 160 150 138" fill="#b9815b"/><ellipse cx="147" cy="152" rx="3" ry="4" fill="#fff" opacity=".25"/>
+    <path id="smile" d="M120 186 Q150 218 180 186 Q150 198 120 186Z" fill="#fff" stroke="#6b2430" stroke-width="3" stroke-linejoin="round"/>
+    <g id="open">
+      <path d="M118 185 Q150 238 182 185 Q150 179 118 185Z" fill="#5c1822"/>
+      <path d="M134 209 Q150 195 166 209 Q150 219 134 209Z" fill="#f2828c"/>
+      <path d="M123 186 Q150 193 177 186 L175 193 Q150 199 125 193Z" fill="#fff"/>
+    </g>
+    <path d="M122 181 Q136 169 150 175 Q164 169 178 181 Q164 185 150 181 Q136 185 122 181Z" fill="#2a1d18"/>
+    <g id="eyes">
+      <ellipse cx="123" cy="129" rx="14" ry="15" fill="url(#eyeW)"/><ellipse cx="177" cy="129" rx="14" ry="15" fill="url(#eyeW)"/>
+      <g id="pupils">
+        <circle cx="124" cy="131" r="8.5" fill="#6b4226"/><circle cx="178" cy="131" r="8.5" fill="#6b4226"/>
+        <circle cx="124" cy="131" r="5" fill="#0e0807"/><circle cx="178" cy="131" r="5" fill="#0e0807"/>
+        <circle cx="128" cy="126" r="3" fill="#fff"/><circle cx="182" cy="126" r="3" fill="#fff"/>
+        <circle cx="120" cy="136" r="1.5" fill="#fff" opacity=".8"/><circle cx="174" cy="136" r="1.5" fill="#fff" opacity=".8"/>
+      </g>
+    </g>
+    <g id="laughEyes" stroke="#2a1810" stroke-width="5" fill="none" stroke-linecap="round"><path d="M110 134 Q123 118 136 134"/><path d="M164 134 Q177 118 190 134"/></g>
+    <g data-act="glasses" fill="rgba(140,195,255,.26)" stroke="#1b1a22" stroke-width="4.5">
+      <rect x="99" y="110" width="48" height="40" rx="15"/><rect x="153" y="110" width="48" height="40" rx="15"/>
+      <path d="M147 126 H153 M99 124 L80 120 M201 124 L220 120" fill="none"/>
+      <path d="M106 120 Q114 115 124 117 M160 120 Q168 115 178 117" stroke="#fff" stroke-width="3" fill="none" opacity=".8" stroke-linecap="round"/>
+    </g>
+    <path id="browL" d="M101 105 Q122 93 144 103" stroke="#241813" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path id="browR" d="M156 103 Q178 93 199 105" stroke="#241813" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M74 118 Q70 56 150 52 Q230 56 226 118 Q214 86 150 82 Q86 86 74 118Z" fill="url(#hair)"/>
+    <g fill="url(#hair)"><circle cx="84" cy="88" r="20"/><circle cx="110" cy="66" r="21"/><circle cx="142" cy="56" r="22"/><circle cx="176" cy="58" r="22"/><circle cx="204" cy="70" r="21"/><circle cx="220" cy="96" r="18"/><circle cx="100" cy="92" r="14"/><circle cx="130" cy="86" r="13"/><circle cx="160" cy="86" r="13"/></g>
+    <path d="M96 74 Q112 60 130 62 M150 60 Q168 54 186 62 M82 92 Q86 80 96 78 M196 80 Q208 78 214 90" stroke="#5d4a42" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/>
+  </g>
+  </g>
+</g>
+</svg>
+</div>
+
+<div id="controls"><button id="mic" aria-label="ধরে রেখে কথা বলুন">🎤</button></div>
+
+<div id="panel">
+  <h2>🎙️ নিজের গলা শেখাও</h2>
+  <p>প্রতিটা লাইনের পাশের বোতাম চেপে ধরে লাইনটা বলো, তারপর ছাড়ো। ক্যারেক্টার তোমার গলা সরু করে বলবে। ব্রাউজারে সেভ থাকবে।</p>
+  <div id="rows"></div>
+  <button id="close" style="margin-top:12px;background:#555;padding:10px 18px;border-radius:999px">বন্ধ করো</button>
+</div>
+
+<script>
+/* ===== কথা এখানে বদলাও ===== */
+const LINES = {
+  hello:   'মাই লাভ নোভা',
+  head:    'নোভা মেরো না',
+  belly:   'হি হি হি! সুড়সুড়ি লাগে!',
+  glasses: 'আমার চশমাটা সুন্দর না?',
+  feed:    'আহ্! কী মজা! ঢেঁকুর!'
+};
+const RATE = 1.4;  /* বেশি = আরও সরু গলা (১.২ থেকে ২) */
+
+const char=document.getElementById('char'), say=document.getElementById('say'), mic=document.getElementById('mic');
+const bubble=t=>say.textContent=t;
+
+let ac;
+function A(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac;}
+
+/* ===== নিজে বানানো কার্টুন গলা (ইন্টারনেট/ভয়েস ছাড়াই সবসময় বাজে) ===== */
+const FORM={a:[730,1090,2440],i:[270,2290,3010],u:[300,870,2240],o:[570,840,2410],e:[530,1840,2480]};
+function noise(t,dur,vol,hp){
+  const c=A(),b=c.createBuffer(1,Math.floor(c.sampleRate*dur),c.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
+  s.buffer=b;f.type='highpass';f.frequency.value=hp;
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  s.connect(f).connect(g).connect(c.destination);s.start(t);
+}
+function syl(v,t,dur,f0a,f0b,vol=.5){   /* একটা স্বরধ্বনি: আ, ই, উ, ও, এ */
+  const c=A(),o=c.createOscillator(),g=c.createGain();
+  o.type='sawtooth';o.frequency.setValueAtTime(f0a,t);o.frequency.linearRampToValueAtTime(f0b,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.03);
+  g.gain.setValueAtTime(vol,t+dur*.6);g.gain.linearRampToValueAtTime(.0001,t+dur);
+  FORM[v].forEach((f,i)=>{const b=c.createBiquadFilter(),k=c.createGain();
+    b.type='bandpass';b.frequency.value=f;b.Q.value=9;k.gain.value=[1,.6,.3][i]*3;o.connect(b);b.connect(k).connect(g);});
+  g.connect(c.destination);o.start(t);o.stop(t+dur+.02);
+}
+const SFX={
+  head(t){syl('u',t,.12,560,620);syl('u',t+.12,.32,620,300);noise(t+.4,.3,.35,2500);return .75;},          /* উফফ */
+  belly(t){for(let i=0;i<5;i++){const s=t+i*.2;noise(s,.07,.18,4000);syl('i',s+.04,.14,560+(i%2)*60,650+(i%2)*60,.55);}return 1.1;}, /* হি হি হি */
+  laugh(t){for(let i=0;i<5;i++){const s=t+i*.22;noise(s,.07,.2,3500);syl('a',s+.05,.16,380-i*8,330-i*8,.6);}return 1.2;}, /* হা হা হা */
+  feed(t){syl('a',t,.45,420,260,.6);noise(t+.5,.1,.2,3000);tone(110,50,.5,'sawtooth',.3,.7);return 1.3;},   /* আহ্ + ঢেঁকুর */
+  glasses(t){syl('u',t,.2,380,460);syl('o',t+.28,.3,460,520);return .65;},                                    /* হুম্ */
+  hello(t){noise(t,.08,.2,4000);syl('e',t+.05,.2,420,540);syl('o',t+.35,.35,520,400);syl('a',t+.95,.18,420,500);syl('o',t+1.15,.4,500,380);return 1.6;} /* হ্যালো-আ-ও */
+};
+const SYNTH_ONLY=[];   /* এগুলো সবসময় নিজের বানানো গলায় */
+function sfx(key){const d=SFX[key](A().currentTime+.02);talk(d*1000);return d;}
+
+function tone(f1,f2,dur,type='sine',vol=.25,delay=0){
+  A();
+  const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+delay;
+  o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur);
+}
+/* কিছুক্ষণের জন্য ক্লাস চালু (অ্যানিমেশন/মুড) */
+function play(cls,ms){char.classList.remove(cls);void char.offsetWidth;char.classList.add(cls);setTimeout(()=>char.classList.remove(cls),ms);}
+function talk(ms){play('talking',ms);}
+
+/* ---- নিজের গলা সংরক্ষণ ---- */
+const custom={};
+let dbp=null;
+try{dbp=new Promise((res,rej)=>{const r=indexedDB.open('tom',1);r.onupgradeneeded=()=>r.result.createObjectStore('v');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}catch(e){}
+const idb=(mode,fn)=>dbp?dbp.then(db=>new Promise((res,rej)=>{const q=fn(db.transaction('v',mode).objectStore('v'));q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);})):Promise.reject();
+function markOk(k){const el=document.getElementById('ok-'+k);if(el)el.textContent='✓';}
+
+/* ---- কথা বলা: ১) নিজের গলা ২) অনলাইন বাংলা ভয়েস ৩) ব্রাউজারের ভয়েস ---- */
+let cur=null, voices=[];
+if('speechSynthesis' in window){const lv=()=>voices=speechSynthesis.getVoices();lv();speechSynthesis.onvoiceschanged=lv;}
+function stopAll(){if(cur){cur.onended=cur.onerror=null;cur.pause();cur=null;} if('speechSynthesis' in window)speechSynthesis.cancel(); char.classList.remove('talking');}
+function playAudio(src,rate,onFail){
+  const au=new Audio(src); cur=au; let failed=false;
+  const fail=()=>{if(failed)return;failed=true;char.classList.remove('talking');onFail&&onFail();};
+  au.preservesPitch=au.mozPreservesPitch=au.webkitPreservesPitch=false; au.playbackRate=rate;
+  au.onplay=()=>char.classList.add('talking');
+  au.onended=()=>char.classList.remove('talking');
+  au.onerror=fail; au.play().catch(fail);
+}
+function speak(key){
+  stopAll(); const text=LINES[key];
+  if(custom[key]) return playAudio(URL.createObjectURL(custom[key]),RATE);
+  if(SYNTH_ONLY.includes(key)) return sfx(key);
+  const url='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=bn&q='+encodeURIComponent(text);
+  playAudio(url,RATE,()=>browserVoice(text,key));
+}
+function browserVoice(text,key){
+  const bn=voices.find(v=>v.lang.toLowerCase().startsWith('bn'));
+  if(!bn){ bubble('🎙️ শেখাও বোতাম চেপে এই লাইনটা নিজের গলায় শেখাও!'); talk(1200); return; }
+  const u=new SpeechSynthesisUtterance(text); u.voice=bn; u.lang=bn.lang; u.pitch=2; u.rate=1.05;
+  u.onstart=()=>char.classList.add('talking'); u.onend=u.onerror=()=>char.classList.remove('talking');
+  speechSynthesis.speak(u); talk(Math.max(1500,text.length*110));
+}
+
+function fx(e,items){
+  const r=char.getBoundingClientRect();
+  items.forEach((s,i)=>{const el=document.createElement('div');el.className='fx';el.textContent=s;
+    el.style.left=(e.clientX-r.left-12+(i-1)*22)+'px';el.style.top=(e.clientY-r.top-12)+'px';
+    el.style.setProperty('--dx',((i-1)*30)+'px');char.appendChild(el);setTimeout(()=>el.remove(),900);});
+}
+
+/* ---- ট্যাপ রিঅ্যাকশন ---- */
+const react={
+  head(e){play('shake',500);play('ouch',900);bubble(LINES.head+'! 😖');speak('head');fx(e,['💫','⭐','💥']);},
+  belly(e){play('wobble',700);play('laugh',1500);bubble(LINES.belly+' 🤣');speak('belly');fx(e,['😂','হি','হি']);},
+  feet(e){tone(300,900,.35,'triangle');play('hop',600);bubble('বুইইং! 🦘');fx(e,['💨','🦘','💨']);},
+  glasses(e){bubble(LINES.glasses+' 😎');speak('glasses');fx(e,['✨','😎','✨']);}
+};
+char.addEventListener('pointerdown',e=>{const z=e.target.closest('[data-act]');if(z)react[z.dataset.act](e);});
+
+/* চোখের মণি আঙুলের দিকে ঘোরে */
+const pupils=document.getElementById('pupils');
+addEventListener('pointermove',e=>{
+  const r=char.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height*.3);
+  const d=Math.hypot(dx,dy)||1,k=Math.min(4,d/40);
+  pupils.setAttribute('transform',`translate(${dx/d*k},${dy/d*k})`);
+});
+
+/* ---- বোতাম ---- */
+function hello(){bubble('My Love Nova ❤️');speak('hello');}
+document.getElementById('hello').onclick=hello;
+document.getElementById('start').onclick=e=>{e.currentTarget.remove();hello();setTimeout(()=>{if(!custom.hello||!custom.head){panel.classList.add('open');}},700);};
+document.getElementById('laugh').onclick=()=>{
+  stopAll();for(let i=0;i<8;i++)tone(600+(i%2)*200,900+(i%2)*200,.09,'square',.1,i*.13);
+  play('wobble',1000);play('laugh',1200);bubble('হা হা হা হা! 😂');
+};
+document.getElementById('feed').onclick=()=>{
+  stopAll();const f=document.createElement('div');f.className='food';f.textContent='🍔';char.appendChild(f);setTimeout(()=>f.remove(),1000);
+  bubble('ম্যাম ম্যাম… 😋');
+  setTimeout(()=>{talk(1000);for(let i=0;i<4;i++)tone(200,120,.1,'square',.08,i*.22);},900);
+  setTimeout(()=>{play('wobble',700);bubble(LINES.feed+' 😮‍💨');speak('feed');},2000);
+};
+
+/* ---- ধরে রেখে রেকর্ড ---- */
+let stream;
+function makeRecorder(btn,onDone){
+  let rec,chunks=[],holding=false;
+  async function s(){
+    holding=true;
+    try{stream=stream||await navigator.mediaDevices.getUserMedia({audio:true});}
+    catch(err){bubble((!window.isSecureContext||!navigator.mediaDevices)
+      ?'🔒 এই ভাবে খুললে মাইক্রোফোন চলে না। ফাইলটা Chrome-এ খোলো বা https লিংকে আপলোড করো'
+      :'🚫 মাইক্রোফোন ব্লক করা আছে। ঠিকানার পাশের 🔒 চেপে Microphone → Allow করো');return;}
+    if(!holding)return; stopAll();
+    chunks=[];rec=new MediaRecorder(stream);
+    rec.ondataavailable=e=>chunks.push(e.data);
+    rec.onstop=()=>onDone(new Blob(chunks,{type:rec.mimeType}));
+    rec.start();btn.classList.add('on');char.classList.add('listen');
+  }
+  function e(){holding=false;if(rec&&rec.state==='recording'){rec.stop();btn.classList.remove('on');char.classList.remove('listen');}}
+  btn.addEventListener('pointerdown',ev=>{ev.preventDefault();s();});
+  ['pointerup','pointerleave','pointercancel'].forEach(n=>btn.addEventListener(n,e));
+}
+makeRecorder(mic,blob=>{bubble('🗣️ ...');playAudio(URL.createObjectURL(blob),1.7);});
+mic.addEventListener('pointerdown',()=>bubble('শুনছি… বলো! 👂'));
+
+/* ---- শেখানোর প্যানেল ---- */
+const panel=document.getElementById('panel'),rows=document.getElementById('rows');
+Object.keys(LINES).forEach(k=>{
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<span class="t">${LINES[k]}</span><span class="ok" id="ok-${k}"></span>
+    <button class="rec">🎙️ ধরো</button><label class="up" title="রেকর্ড করা অডিও ফাইল দাও">📁<input type="file" accept="audio/*" hidden></label><button class="pl" style="background:#2a9d4a">▶</button>`;
+  rows.appendChild(r);
+  r.querySelector('input').onchange=ev=>{const f=ev.target.files[0];if(!f)return;custom[k]=f;markOk(k);idb('readwrite',s=>s.put(f,k)).catch(()=>{});speak(k);};
+  makeRecorder(r.querySelector('.rec'),blob=>{custom[k]=blob;markOk(k);idb('readwrite',s=>s.put(blob,k)).catch(()=>{});speak(k);});
+  r.querySelector('.pl').onclick=()=>speak(k);
+  idb('readonly',s=>s.get(k)).then(b=>{if(b){custom[k]=b;markOk(k);}}).catch(()=>{});
+});
+document.getElementById('teach').onclick=()=>panel.classList.add('open');
+document.getElementById('close').onclick=()=>panel.classList.remove('open');
+</script>
+</body>
+</html>
