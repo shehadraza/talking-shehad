@@ -12,7 +12,8 @@ html,body{height:100%}
 body{font-family:"Baloo Da 2","Hind Siliguri",system-ui,sans-serif;color:var(--ink);
   background:repeating-linear-gradient(90deg,#ffe6b8 0 38px,#ffdca3 38px 76px);
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-  overflow:hidden;position:relative;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+  overflow:hidden;position:relative;height:100vh;height:100dvh;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;
+  padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
 /* ঘরের মেঝে ও কার্পেট */
 body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:25vh;border-top:8px solid #fff;
   background:repeating-linear-gradient(90deg,#c0813f 0 70px,#b0732f 70px 73px),linear-gradient(#0000,#0002);background-blend-mode:multiply}
@@ -29,8 +30,8 @@ body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:25vh;bor
   font-weight:800;font-size:1.15rem;text-align:center;min-height:44px;box-shadow:0 5px 0 rgba(0,0,0,.14);border:3px solid #ffb35c}
 #say::after{content:"";position:absolute;bottom:-12px;left:50%;margin-left:-10px;border:10px solid transparent;border-top-color:#fff;border-bottom:0}
 
-#char{position:relative;z-index:2;width:min(80vw,350px);height:min(60vh,122vw);user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-#char svg{width:100%;height:100%;overflow:visible}
+#char{position:relative;z-index:2;flex:1 1 0;min-height:0;width:min(88vw,380px);margin:14px 0 6px;user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#char svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 [data-act]{cursor:pointer}
 #breath{transform-origin:150px 425px;animation:breathe 3.6s ease-in-out infinite}
 @keyframes breathe{50%{transform:scale(1.01,1.017)}}
@@ -81,7 +82,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 @keyframes pulse{to{transform:scale(1.1)}}
 #start{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(59,35,20,.6);cursor:pointer}
 #start span{background:#fff;padding:20px 30px;border-radius:28px;font-weight:800;font-size:1.45rem;box-shadow:0 7px 0 #ffb35c}
-#panel{position:fixed;inset:auto 0 0 0;z-index:8;background:#fff;border-radius:24px 24px 0 0;padding:16px;max-height:75vh;overflow:auto;
+#panel{position:fixed;inset:auto 0 0 0;z-index:8;background:#fff;border-radius:24px 24px 0 0;padding:16px;max-height:80vh;max-height:80dvh;overflow:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));
   box-shadow:0 -6px 24px rgba(0,0,0,.3);transform:translateY(105%);transition:transform .25s}
 #panel.open{transform:none}
 #panel h2{font-size:1.15rem;margin-bottom:4px}
@@ -91,7 +92,10 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .row button{padding:8px 12px;font-size:.9rem;border-radius:999px;background:#3b82c4;touch-action:none}
 .up{padding:8px 12px;font-size:.9rem;border-radius:999px;background:#7c5cd6;color:#fff;cursor:pointer}
 .ok{color:#2a9d4a;font-weight:800;min-width:1.2em}
-@media (max-height:640px){.win,.frame{display:none}}
+@media (max-width:390px){.ib{width:52px;height:52px;font-size:1.45rem}.ib small{font-size:.55rem}.frame{display:none}}
+@media (max-height:700px){.win,.frame{display:none}}
+@media (max-height:520px){.rug{display:none}.ib small{display:none}.ib{width:46px;height:46px;font-size:1.3rem}#mic{width:62px;height:62px;font-size:1.5rem}#say{font-size:.95rem;min-height:34px;margin-top:6px;padding:4px 14px}.side{top:30%}}
+button{-webkit-user-select:none;user-select:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -195,10 +199,18 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
   <h2>🎙️ নিজের গলা শেখাও</h2>
   <p>প্রতিটা লাইনের পাশের বোতাম চেপে ধরে লাইনটা বলো, তারপর ছাড়ো। ক্যারেক্টার তোমার গলা সরু করে বলবে। ব্রাউজারে সেভ থাকবে।</p>
   <div id="rows"></div>
+  <div style="margin-top:14px;padding-top:12px;border-top:2px dashed #ffb35c">
+    <p><b>সব ডিভাইসে একই গলা পেতে:</b> সব লাইন শেখানো হলে নিচের বোতামে নতুন ফাইল বানাও। ওই ফাইলের ভেতরেই তোমার গলা থাকবে। সেই ফাইল যাকে পাঠাবে বা যেখানে খুলবে, একই গলা বাজবে।</p>
+    <button id="save" style="background:#2a9d4a;padding:10px 18px;border-radius:999px">💾 ফাইল সেভ করো</button>
+    <button id="share" style="background:#7c5cd6;padding:10px 18px;border-radius:999px">📤 শেয়ার</button>
+    <p id="expStatus" style="margin-top:8px"></p>
+  </div>
   <button id="close" style="margin-top:12px;background:#555;padding:10px 18px;border-radius:999px">বন্ধ করো</button>
 </div>
 
+<script type="application/json" id="embed">{}</script>
 <script>
+const START_HTML=document.getElementById('start').outerHTML;
 /* ===== কথা এখানে বদলাও ===== */
 const LINES = {
   hello:   'মাই লাভ নোভা',
@@ -215,35 +227,6 @@ const bubble=t=>say.textContent=t;
 let ac;
 function A(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac;}
 
-/* ===== নিজে বানানো কার্টুন গলা (ইন্টারনেট/ভয়েস ছাড়াই সবসময় বাজে) ===== */
-const FORM={a:[730,1090,2440],i:[270,2290,3010],u:[300,870,2240],o:[570,840,2410],e:[530,1840,2480]};
-function noise(t,dur,vol,hp){
-  const c=A(),b=c.createBuffer(1,Math.floor(c.sampleRate*dur),c.sampleRate),d=b.getChannelData(0);
-  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
-  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
-  s.buffer=b;f.type='highpass';f.frequency.value=hp;
-  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-  s.connect(f).connect(g).connect(c.destination);s.start(t);
-}
-function syl(v,t,dur,f0a,f0b,vol=.5){   /* একটা স্বরধ্বনি: আ, ই, উ, ও, এ */
-  const c=A(),o=c.createOscillator(),g=c.createGain();
-  o.type='sawtooth';o.frequency.setValueAtTime(f0a,t);o.frequency.linearRampToValueAtTime(f0b,t+dur);
-  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.03);
-  g.gain.setValueAtTime(vol,t+dur*.6);g.gain.linearRampToValueAtTime(.0001,t+dur);
-  FORM[v].forEach((f,i)=>{const b=c.createBiquadFilter(),k=c.createGain();
-    b.type='bandpass';b.frequency.value=f;b.Q.value=9;k.gain.value=[1,.6,.3][i]*3;o.connect(b);b.connect(k).connect(g);});
-  g.connect(c.destination);o.start(t);o.stop(t+dur+.02);
-}
-const SFX={
-  head(t){syl('u',t,.12,560,620);syl('u',t+.12,.32,620,300);noise(t+.4,.3,.35,2500);return .75;},          /* উফফ */
-  belly(t){for(let i=0;i<5;i++){const s=t+i*.2;noise(s,.07,.18,4000);syl('i',s+.04,.14,560+(i%2)*60,650+(i%2)*60,.55);}return 1.1;}, /* হি হি হি */
-  laugh(t){for(let i=0;i<5;i++){const s=t+i*.22;noise(s,.07,.2,3500);syl('a',s+.05,.16,380-i*8,330-i*8,.6);}return 1.2;}, /* হা হা হা */
-  feed(t){syl('a',t,.45,420,260,.6);noise(t+.5,.1,.2,3000);tone(110,50,.5,'sawtooth',.3,.7);return 1.3;},   /* আহ্ + ঢেঁকুর */
-  glasses(t){syl('u',t,.2,380,460);syl('o',t+.28,.3,460,520);return .65;},                                    /* হুম্ */
-  hello(t){noise(t,.08,.2,4000);syl('e',t+.05,.2,420,540);syl('o',t+.35,.35,520,400);syl('a',t+.95,.18,420,500);syl('o',t+1.15,.4,500,380);return 1.6;} /* হ্যালো-আ-ও */
-};
-const SYNTH_ONLY=[];   /* এগুলো সবসময় নিজের বানানো গলায় */
-function sfx(key){const d=SFX[key](A().currentTime+.02);talk(d*1000);return d;}
 
 function tone(f1,f2,dur,type='sine',vol=.25,delay=0){
   A();
@@ -263,6 +246,50 @@ try{dbp=new Promise((res,rej)=>{const r=indexedDB.open('tom',1);r.onupgradeneede
 const idb=(mode,fn)=>dbp?dbp.then(db=>new Promise((res,rej)=>{const q=fn(db.transaction('v',mode).objectStore('v'));q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);})):Promise.reject();
 function markOk(k){const el=document.getElementById('ok-'+k);if(el)el.textContent='✓';}
 
+/* ---- যেকোনো রেকর্ডিংকে WAV বানানো (সব ফোন/ব্রাউজারে বাজে) ---- */
+async function toWav(blob){
+  const buf=await blob.arrayBuffer(), c=A();
+  const audio=await new Promise((res,rej)=>{const p=c.decodeAudioData(buf,res,rej);if(p&&p.catch)p.catch(rej);});
+  const sr=16000, src=audio.getChannelData(0), len=Math.min(Math.floor(audio.duration*sr),sr*10), ratio=audio.sampleRate/sr;
+  const out=new Int16Array(len);
+  for(let i=0;i<len;i++){const x=i*ratio,i0=Math.floor(x),i1=Math.min(i0+1,src.length-1),f=x-i0;
+    out[i]=Math.max(-1,Math.min(1,(src[i0]*(1-f)+src[i1]*f)*1.5))*32767;}
+  const wav=new ArrayBuffer(44+len*2),dv=new DataView(wav),W=(o,t)=>[...t].forEach((ch,i)=>dv.setUint8(o+i,ch.charCodeAt(0)));
+  W(0,'RIFF');dv.setUint32(4,36+len*2,true);W(8,'WAVEfmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);
+  dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);W(36,'data');dv.setUint32(40,len*2,true);
+  new Int16Array(wav,44).set(out);
+  return new Blob([wav],{type:'audio/wav'});
+}
+const toURL=b=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(b);});
+async function setVoice(k,blob){
+  let w=blob; try{w=await toWav(blob);}catch(e){}
+  custom[k]=w; markOk(k); idb('readwrite',s=>s.put(w,k)).catch(()=>{});
+}
+
+/* ---- ফাইলের ভেতরে গলা বসিয়ে নতুন HTML ফাইল বানানো ---- */
+async function buildHtml(){
+  const E={}; for(const k of Object.keys(LINES)) if(custom[k]) E[k]=await toURL(custom[k]);
+  const c=document.documentElement.cloneNode(true);
+  c.querySelector('#embed').textContent=JSON.stringify(E);
+  c.querySelector('#rows').innerHTML=''; c.querySelector('#panel').className='';
+  c.querySelector('#char').className=''; c.querySelectorAll('.fx,.food').forEach(n=>n.remove());
+  c.querySelector('#mic').className=''; c.querySelector('#say').textContent='My Love Nova ❤️';
+  c.querySelector('#pupils').removeAttribute('transform'); c.querySelector('#expStatus').textContent='';
+  if(!c.querySelector('#start')) c.querySelector('body').insertAdjacentHTML('afterbegin',START_HTML);
+  return '<!DOCTYPE html>\n'+c.outerHTML;
+}
+async function exportFile(share){
+  const st=document.getElementById('expStatus');
+  if(!Object.keys(LINES).some(k=>custom[k])){st.textContent='⚠️ আগে অন্তত একটা লাইন শেখাও।';return;}
+  st.textContent='⏳ ফাইল বানাচ্ছি…';
+  const blob=new Blob([await buildHtml()],{type:'text/html'}), file=new File([blob],'talking-nova.html',{type:'text/html'});
+  if(share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:'My Love Nova ❤️'});st.textContent='✅ শেয়ার হয়েছে';return;}catch(e){if(e.name==='AbortError'){st.textContent='';return;}}
+  }
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='talking-nova.html';document.body.appendChild(a);a.click();a.remove();
+  st.textContent='✅ talking-nova.html ফাইল ডাউনলোড হয়েছে। এই ফাইলটাই সবাইকে দাও।';
+}
+
 /* ---- কথা বলা: ১) নিজের গলা ২) অনলাইন বাংলা ভয়েস ৩) ব্রাউজারের ভয়েস ---- */
 let cur=null, voices=[];
 if('speechSynthesis' in window){const lv=()=>voices=speechSynthesis.getVoices();lv();speechSynthesis.onvoiceschanged=lv;}
@@ -278,7 +305,6 @@ function playAudio(src,rate,onFail){
 function speak(key){
   stopAll(); const text=LINES[key];
   if(custom[key]) return playAudio(URL.createObjectURL(custom[key]),RATE);
-  if(SYNTH_ONLY.includes(key)) return sfx(key);
   const url='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=bn&q='+encodeURIComponent(text);
   playAudio(url,RATE,()=>browserVoice(text,key));
 }
@@ -359,11 +385,16 @@ Object.keys(LINES).forEach(k=>{
   r.innerHTML=`<span class="t">${LINES[k]}</span><span class="ok" id="ok-${k}"></span>
     <button class="rec">🎙️ ধরো</button><label class="up" title="রেকর্ড করা অডিও ফাইল দাও">📁<input type="file" accept="audio/*" hidden></label><button class="pl" style="background:#2a9d4a">▶</button>`;
   rows.appendChild(r);
-  r.querySelector('input').onchange=ev=>{const f=ev.target.files[0];if(!f)return;custom[k]=f;markOk(k);idb('readwrite',s=>s.put(f,k)).catch(()=>{});speak(k);};
-  makeRecorder(r.querySelector('.rec'),blob=>{custom[k]=blob;markOk(k);idb('readwrite',s=>s.put(blob,k)).catch(()=>{});speak(k);});
+  r.querySelector('input').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;await setVoice(k,f);speak(k);};
+  makeRecorder(r.querySelector('.rec'),async blob=>{await setVoice(k,blob);speak(k);});
   r.querySelector('.pl').onclick=()=>speak(k);
   idb('readonly',s=>s.get(k)).then(b=>{if(b){custom[k]=b;markOk(k);}}).catch(()=>{});
 });
+/* ফাইলে বসানো গলা লোড (নিজের ব্রাউজারে শেখানো গলা থাকলে সেটাই প্রাধান্য পায়) */
+try{const E=JSON.parse(document.getElementById('embed').textContent||'{}');
+  Object.keys(E).forEach(k=>fetch(E[k]).then(r=>r.blob()).then(b=>{if(!custom[k]){custom[k]=b;markOk(k);}}).catch(()=>{}));}catch(e){}
+document.getElementById('save').onclick=()=>exportFile(false);
+document.getElementById('share').onclick=()=>exportFile(true);
 document.getElementById('teach').onclick=()=>panel.classList.add('open');
 document.getElementById('close').onclick=()=>panel.classList.remove('open');
 </script>
